@@ -23,6 +23,11 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+
+
+      - name: Get tag name
+        id: get_tag_name
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
@@ -40,4 +45,4 @@ jobs:
         with:
           context: ./newlocation
           push: true
-          tags: kastras/cicd:${{ CI_COMMIT_TAG }}
+          tags: kastras/cicd:${{ steps.get_tag_name.outputs.VERSION }}
