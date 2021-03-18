@@ -41,4 +41,4 @@ jobs:
         with:
           context: ./newlocation
           push: true
-          tags: kastras/cicd:latest
+          tags: kastras/cicd:${{ CI_COMMIT_TAG }}
