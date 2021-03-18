@@ -1,7 +1,10 @@
-FROM ubuntu:latest
-LABEL NowWithLabel=yes
-RUN export DEBIAN_FRONTEND=noninteractive && ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
-RUN apt-get update
-RUN apt-get install -y tzdata apache2 curl
-EXPOSE 80
-CMD ["apache2", "-DFOREGROUND"]
+FROM alpine:latest
+MAINTAINER ruben.castrelo@prefapp.es
+LABEL ENV=TESTING
+RUN apk add --update supervisor nginx python3 python3-dev py3-pip build-base libressl-dev musl-dev libffi-dev && rm  -rf /tmp/* /var/cache/apk/*
+RUN pip3 install pip --upgrade
+RUN pip3 install rust certbot-nginx
+RUN mkdir /etc/letsencrypt
+COPY default.conf /etc/nginx/conf.d/default.conf
+ADD supervisord.conf /etc/
+CMD ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]
